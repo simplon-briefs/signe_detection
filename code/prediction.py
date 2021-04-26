@@ -4,11 +4,13 @@ import pandas as pd
 import pickle
 import numpy as np
 import time
+import cv2
+from collections import Counter
 
-with open('model_coord_finger.sav', 'rb') as model:
+with open('C:/Users/utilisateur/Documents/microsoft_ia/Devoirs/signe_detection/model_coord_finger.sav', 'rb') as model:
     model = pickle.load(model)
 def detection(img):
-    with open('model_coord_finger.sav', 'rb') as model:
+    with open('C:/Users/utilisateur/Documents/microsoft_ia/Devoirs/signe_detection/model_coord_finger.sav', 'rb') as model:
         model = pickle.load(model)
     detector = HandDetector()
 
@@ -36,21 +38,41 @@ def detection(img):
 
 
 def video():
+    liste = []
     pTime = 0
     cTime = 0
+
     cap = cv2.VideoCapture(0)
+    phrase = ""
+    occurence  = ""
     while True:
         sucess, img = cap.read()
         cTime = time.time()
         fps = 1/(cTime-pTime)
         pTime = cTime
-
+        
         predict = detection(img)
         if  predict != None:
-            cv2.putText(img, str(predict[0]), (10, 100),cv2.FONT_HERSHEY_PLAIN, 3,(255,0,255), 3)
-
-        cv2.putText(img, str(int(fps)), (10, 70),cv2.FONT_HERSHEY_PLAIN, 3,(255,0,255), 3)
+            
+            cv2.putText(img, str(predict[0]), (10, 100),cv2.FONT_HERSHEY_PLAIN, 3,(0,0,255), 3)
+            #On récupère les lettre
+            liste += str(predict[0])
+            #une fois qu'on a 15 lettre on recupère la lettre ayant le plus d'occurences puis on l'affiche à chaque boucle
+            if len(liste) == 15:
+                occurence = Counter(liste).most_common(1)
+                #compteur = 0
+                phrase += occurence[0][0]
+                       
+                liste = ""   
+                # print(phrase)    
+        cv2.putText(img, str(int(fps)), (10, 70),cv2.FONT_HERSHEY_PLAIN, 3,(0,0,255), 3)
+        cv2.putText(img, "phrase:", (10, 400),cv2.FONT_HERSHEY_PLAIN, 3,(0,0,255), 3)
+        cv2.putText(img, phrase, (10, 450),cv2.FONT_HERSHEY_PLAIN, 3,(0,0,255), 3)
         cv2.imshow("Image", img)
-        cv2.waitKey(1)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            print(phrase)
+            break
+        
 
 video()
