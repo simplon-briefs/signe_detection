@@ -6,4 +6,4 @@ Beaucoup de progrès et de recherches en IA ont été faites pour aider les pers
 Cela peut être très utile pour les personnes sourdes et muettes dans la communication avec les autres car la connaissance de la langue des signes n'est pas quelque chose qui est commun à tous, de plus, cela peut être étendu à la création des éditeurs automatiques, où la personne peut facilement écrire par ses simples gestes .
 
 # Rendu final
-[!image](/images.png)
+[!image](images.png)
